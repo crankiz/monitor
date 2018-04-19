@@ -1,9 +1,9 @@
 #!/bin/bash
 
-HOST=crankiz.org
+HOST=hostname.org
 DATE=$(date "+%Y-%m-%d %H:%M:%S")
 LOGPATH=/var/log/monitor/monitor.log
-API="o.hIK92qEUqkDmvQxgFRirX1Qc8TnOZMnY"
+API="API-key"
 URL="https://api.pushbullet.com/v2/pushes"
 
 STATE="offline"
