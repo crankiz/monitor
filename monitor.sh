@@ -1,33 +1,26 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# This script needs notify-cli
+# npm install -g notify-cli
 
-HOST=hostname.org
-DATE=$(date "+%Y-%m-%d %H:%M:%S")
-LOGPATH=/var/log/monitor/monitor.log
-API="API-key"
-URL="https://api.pushbullet.com/v2/pushes"
+host="hostname"
+date=$(date "+%Y-%m-%d %H:%M:%S")
+logpath="$(dirname "$0")/monitor.log"
+[ -f ${logpath} ] || touch "${logpath}"
 
-STATE="offline"
-OLDSTATE=$(cat $LOGPATH | tail -1 | awk '{print $4}')
-PINGCOUNT=$(ping -i 0.33 -c 3 $HOST|tail -2|head -1|awk '{print $4}')
-
-
-pushbullet () {
-  curl -s -u $API: -X POST $URL \
-    --header 'Content-Type: application/json' \
-    --data-binary '{"type": "note", "title": "'"$HOST is $STATE!"'", "body": "'"Host $STATE $DATE"'"}' >/dev/null 2>&1
+ping_func(){
+  ping -i 0.33 -c 3 ${host} &> /dev/null
 }
 
-check_state () {
-  if [ "$PINGCOUNT" -gt 1 ]
-    then
-      STATE="online"
-  fi
-  echo "$DATE $HOST $STATE" >> $LOGPATH
+send_push () {
+  notify -i "$1" -t "$2"
 }
 
-check_state
+main () {
+  prev_state=$(awk 'END{print $4}' "${logpath}")
+  ping_func && new_state="online" || new_state="offline"
+  logpost=$(printf "%s %s %s\n" "${date}" "${host}" "${new_state}")
+  [ "${new_state}" != "${prev_state}" ] && send_push "${host} ${new_state}!" "${logpost}"|| exit 0
+  printf "%s" "${logpost}" >> ${logpath}
+}
 
-if [ "$STATE" != "$OLDSTATE" ]
-    then
-      pushbullet
-fi
+main
