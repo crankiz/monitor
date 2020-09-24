@@ -1,5 +1,5 @@
 # monitor
-This is a docker container for monitoring a server and send push notifications if state cahnges.
+This is a docker container for monitoring a server and send push notifications if state cahnges.<br>
 Notifications is send by this application [notify-cli](https://mashlol.github.io/notify/)
  
 Building
