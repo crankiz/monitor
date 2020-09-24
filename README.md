@@ -1,5 +1,6 @@
 # monitor
- This is a docker container for monitoring a server and send push notifications if state cahnges.
+This is a docker container for monitoring a server and send push notifications if state cahnges.
+Notifications is send by this application [notify-cli](https://mashlol.github.io/notify/)
  
 Building
 -------
@@ -11,6 +12,14 @@ $ docker build -t crankiz/monitor .
 
 Running
 -------
+
+Specify the following environment variables:
+```
+TOKEN=xxxxxxxxx
+MONITOR_HOST=127.0.0.1
+```
+The token you find in your notify android app
+
 
 Run:
 
